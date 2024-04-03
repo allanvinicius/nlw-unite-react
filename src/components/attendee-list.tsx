@@ -11,8 +11,16 @@ import { Table } from "./table/table";
 import { TableHeader } from "./table/table-header";
 import { TableCell } from "./table/table-cell";
 import { TableRow } from "./table/table-row";
+import { ChangeEvent, useState } from "react";
+import { attendees } from "../data/attendees";
 
 export function AttendeeList() {
+  const [search, setSearch] = useState("");
+
+  function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
+    setSearch(event.target.value);
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
@@ -21,6 +29,8 @@ export function AttendeeList() {
         <div className="w-72 px-3 py-1.5 border border-white/10 rounded-lg text-sm flex items-center gap-3">
           <Search className="size-4 text-emerald-300" />
           <input
+            onChange={onSearchInputChanged}
+            value={search}
             className="flex-1 bg-transparent outline-none border-0 p-0 text-sm"
             placeholder="Buscar participante..."
           />
@@ -50,8 +60,8 @@ export function AttendeeList() {
         </thead>
 
         <tbody>
-          {Array.from({ length: 8 }).map((_, i) => (
-            <TableRow key={i}>
+          {attendees.map(({ id, name, email, createdAt, checkedInAt }) => (
+            <TableRow key={id}>
               <TableCell>
                 <input
                   type="checkbox"
@@ -59,20 +69,18 @@ export function AttendeeList() {
                 />
               </TableCell>
 
-              <td>52716</td>
+              <td>{id}</td>
 
               <TableCell>
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-white">
-                    Allan Vinícius
-                  </span>
-                  <span>allanvinicius@gmail.com</span>
+                  <span className="font-semibold text-white">{name}</span>
+                  <span>{email}</span>
                 </div>
               </TableCell>
 
-              <TableCell>7 dias atrás</TableCell>
+              <TableCell>{createdAt.toISOString()}</TableCell>
 
-              <TableCell>3 dias atrás</TableCell>
+              <TableCell>{checkedInAt.toISOString()}</TableCell>
 
               <TableCell>
                 <IconButton transparent>
